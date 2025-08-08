@@ -19,6 +19,14 @@ Refer to the [EMC2305 datasheet](https://www.microchip.com/en-us/product/EMC2305
 
 ---
 
+| Address (Hex) | Address (Decimal) |
+| ------------- | ----------------- |
+| `0x2F`        | 47                |
+| `0x4C`        | 76                |
+| `0x2C`        | 44                |
+| `0x2D`        | 45                |
+| `0x2E`        | 46                |
+
 ## YAML Configuration (Example)
 
 ```yaml
