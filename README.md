@@ -29,18 +29,18 @@ external_components:
       ref: main
     components: [emc2305]
 
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+
 # Address (Hex) 
 #
 # 0x2F     
 # 0x4C   
 # 0x2C    
 # 0x2D   
-# 0x2E 
-
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
+# 0x2E
 
 emc2305:
   - id: emc1
