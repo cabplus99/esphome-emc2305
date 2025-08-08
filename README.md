@@ -19,8 +19,6 @@ Refer to the [EMC2305 datasheet](https://www.microchip.com/en-us/product/EMC2305
 
 ---
 
----
-
 Currently untested waiting on parts.
 
 ---
