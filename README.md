@@ -35,15 +35,22 @@ i2c:
   scan: true
 
 emc2305:
-  - id: fan_controller_1
+  - id: emc1
     address: 0x2F
+    pwm:
+      resolution: 8
 
 output:
   - platform: emc2305
-    emc2305_id: fan_controller_1
-    channel: 0
     id: fan0_pwm
+    channel: 0
+    emc2305_id: emc1
+
+sensor:
   - platform: emc2305
-    emc2305_id: fan_controller_1
-    channel: 1
-    id: fan1_pwm
+    emc2305_id: emc1
+    channel: 0
+    speed:
+      name: "Fan 1 RPM"
+    duty_cycle:
+      name: "Fan 1 Duty Cycle"
