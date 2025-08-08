@@ -29,6 +29,14 @@ external_components:
       ref: main
     components: [emc2305]
 
+#| Address (Hex) | Address (Decimal) |
+#| ------------- | ----------------- |
+#| `0x2F`        | 47                |
+#| `0x4C`        | 76                |
+#| `0x2C`        | 44                |
+#| `0x2D`        | 45                |
+#| `0x2E`        | 46                |
+
 i2c:
   sda: GPIO21
   scl: GPIO22
@@ -55,10 +63,3 @@ sensor:
     duty_cycle:
       name: "Fan 1 Duty Cycle"
 
-| Address (Hex) | Address (Decimal) |
-| ------------- | ----------------- |
-| `0x2F`        | 47                |
-| `0x4C`        | 76                |
-| `0x2C`        | 44                |
-| `0x2D`        | 45                |
-| `0x2E`        | 46                |
