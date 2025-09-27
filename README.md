@@ -17,7 +17,7 @@ Refer to the [EMC2305 datasheet](https://www.microchip.com/en-us/product/EMC2305
 - Optional sensors for duty cycle and speed
   - Fan stall detection  
   - Drive fail status  
-- compatible with ESPHome’s component system
+- Compatible with ESPHome’s component system
 
 --
 
