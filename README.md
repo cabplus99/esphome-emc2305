@@ -14,11 +14,10 @@ Refer to the [EMC2305 datasheet](https://www.microchip.com/en-us/product/EMC2305
 
 - Control up to 5 fans per EMC2305 chip via PWM or DAC mode  
 - Read fan RPM via tachometer feedback  
-- Supports per-channel configuration  
 - Optional sensors for duty cycle and speed
   - Fan stall detection  
   - Drive fail status  
-- Fully compatible with ESPHome’s component system
+- compatible with ESPHome’s component system
 
 --
 
