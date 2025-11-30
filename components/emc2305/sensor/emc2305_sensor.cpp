@@ -40,7 +40,7 @@ void Emc2305Sensor::update() {
 
   // --- Stall status (0x25) ---
   uint8_t stall_reg = 0;
-  auto err1 = this->parent_->read_register(0x25, &stall_reg, 1, true);
+  auto err1 = this->parent_->read_register(0x25, &stall_reg, 1);
 
   if (err1 != esphome::i2c::ERROR_OK) {
     ESP_LOGE(TAG, "Failed to read stall status (0x25) from EMC2305 at 0x%02X",
@@ -50,7 +50,7 @@ void Emc2305Sensor::update() {
 
   // --- Drive fail status (0x27) ---
   uint8_t df_reg = 0;
-  auto err2 = this->parent_->read_register(0x27, &df_reg, 1, true);
+  auto err2 = this->parent_->read_register(0x27, &df_reg, 1);
 
   if (err2 != esphome::i2c::ERROR_OK) {
     ESP_LOGE(TAG, "Failed to read drive fail status (0x27) from EMC2305 at 0x%02X",
