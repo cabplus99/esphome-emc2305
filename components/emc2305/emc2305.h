@@ -23,6 +23,12 @@ enum Emc2305DACConversionRate {
   EMC2305_DAC_32_EVERY_SECOND,
 };
 
+enum Emc2305RampRate {
+  EMC2305_RAMP_SLOW   = 0,
+  EMC2305_RAMP_MEDIUM = 3,
+  EMC2305_RAMP_FAST   = 7,
+};
+
 /// This class provides configuration and control for the EMC2305 I²C fan controller.
 /// Each EMC2305 chip controls up to 5 fans (PWM/DAC + tachometer feedback).
 class Emc2305Component : public Component, public i2c::I2CDevice {
@@ -78,6 +84,8 @@ class Emc2305Component : public Component, public i2c::I2CDevice {
   uint8_t max_output_value_{255};
   uint8_t pwm_resolution_{8};
   uint8_t pwm_divider_{1};
+  uint8_t ramp_step_{0};
+  uint8_t ramp_rate_{0};
   Emc2305DACConversionRate dac_conversion_rate_{EMC2305_DAC_1_EVERY_SECOND};
 
   // Per-fan state (5 fans per chip)
