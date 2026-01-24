@@ -44,14 +44,31 @@ void Emc2305Component::setup() {
 
   // Enable tach on all 5 fans
   for (int i = 0; i < 5; i++) {
-    this->write_byte(FAN_CONFIG[i], 0x10);  // bit4 = tach enable
-    this->set_duty_cycle(i, 0.0f);          // start at 0%
+  // --- FAN_CONFIG ---
+  // bit4 = tach enable
+  // bits2:0 = tach range (0x07 = max range)
+  // bits3:1 = ramp update rate (example: 0b011)
+  uint8_t fan_config =
+      0x10 |                  // TACH enable
+      (this->ramp_rate_ << 1) | // ramp update rate (3 bits)
+      0x07;                    // TACH range
 
-    uint8_t reg = FAN_CONFIG[i];
-    if (!this->write_byte(reg, 0x07)) {
-        ESP_LOGW(TAG, "Failed to set TACH range for fan %d", i + 1);
+  if (!this->write_byte(FAN_CONFIG[i], fan_config)) {
+    ESP_LOGW(TAG, "Failed to set FAN_CONFIG for fan %d", i + 1);
+  }
+
+  // --- FAN_STEP ---
+  // Sets max PWM step per update (hardware ramp)
+  if (this->ramp_step_ > 0) {
+    if (!this->write_byte(FAN_BASE_REG[i] + 0x01, this->ramp_step_)) {
+      ESP_LOGW(TAG, "Failed to set ramp step for fan %d", i + 1);
     }
   }
+
+    // --- Start stopped ---
+    this->set_duty_cycle(i, 0.0f);
+  }
+
 
   ESP_LOGI(TAG, "[0x%02X] Init complete", this->address_);
 }
