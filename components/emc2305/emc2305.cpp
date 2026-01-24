@@ -44,19 +44,14 @@ void Emc2305Component::setup() {
 
   // Enable tach on all 5 fans
   for (int i = 0; i < 5; i++) {
-    // --- FAN_CONFIG ---
-    // bit4 = tach enable
-    // bits2:0 = tach range (0x07 = max range)
-    uint8_t fan_config =
-        0x10 |    // TACH enable
-        0x07;     // TACH range max
+    this->write_byte(FAN_CONFIG[i], 0x10);  // bit4 = tach enable
+    this->set_duty_cycle(i, 0.0f);          // start at 0%
 
-    if (!this->write_byte(FAN_CONFIG[i], fan_config)) {
-      ESP_LOGW(TAG, "Failed to set FAN_CONFIG for fan %d", i + 1);
+    uint8_t reg = FAN_CONFIG[i];
+    if (!this->write_byte(reg, 0x07)) {
+        ESP_LOGW(TAG, "Failed to set TACH range for fan %d", i + 1);
     }
-
-    // --- RAMP / SPIN-UP ---
-    // Spin-up register is 0x36/0x46/0x56/0x66/0x76
+    
     if (this->ramp_step_ > 0) {
       if (!this->write_byte(FAN_RAMP[i], this->ramp_step_)) {
         ESP_LOGW(TAG, "Failed to set ramp step for fan %d", i + 1);
