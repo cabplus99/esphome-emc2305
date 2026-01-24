@@ -11,12 +11,23 @@ CONF_PWM = "pwm"
 CONF_DIVIDER = "divider"
 CONF_DAC = "dac"
 CONF_CONVERSION_RATE = "conversion_rate"
+CONF_RAMP = "ramp"
+CONF_RAMP_STEP = "step"
+CONF_RAMP_RATE = "rate"
 
 CONF_EMC2305_ID = "emc2305_id"
 
 emc2305_ns = cg.esphome_ns.namespace("emc2305")
 
 Emc2305DACConversionRate = emc2305_ns.enum("Emc2305DACConversionRate")
+
+Emc2305RampRate = emc2305_ns.enum("Emc2305RampRate")
+
+RAMP_RATES = {
+    "slow":   Emc2305RampRate.EMC2305_RAMP_SLOW,
+    "medium": Emc2305RampRate.EMC2305_RAMP_MEDIUM,
+    "fast":   Emc2305RampRate.EMC2305_RAMP_FAST,
+}
 
 CONVERSIONS_PER_SECOND = {
     "1/16": Emc2305DACConversionRate.EMC2305_DAC_1_EVERY_16_S,
@@ -54,6 +65,12 @@ CONFIG_SCHEMA = cv.All(
                     cv.Optional(CONF_CONVERSION_RATE, default="16"): cv.enum(CONVERSIONS_PER_SECOND),
                 }
             ),
+            cv.Optional(CONF_RAMP): cv.Schema(
+                {
+                    cv.Required(CONF_RAMP_STEP): cv.int_range(min=1, max=255),
+                    cv.Optional(CONF_RAMP_RATE, default="medium"): cv.enum(RAMP_RATES),
+                }
+            ),
             cv.Optional(CONF_INVERTED, default=False): cv.boolean,
         }
     )
@@ -76,5 +93,9 @@ async def to_code(config):
     if dac_config := config.get(CONF_DAC):
         cg.add(var.set_dac_mode(True))
         cg.add(var.set_dac_conversion_rate(dac_config[CONF_CONVERSION_RATE]))
+        
+    if ramp := config.get(CONF_RAMP):
+        cg.add(var.set_ramp_step(ramp[CONF_RAMP_STEP]))
+        cg.add(var.set_ramp_rate(ramp[CONF_RAMP_RATE]))
 
     cg.add(var.set_inverted(config[CONF_INVERTED]))
