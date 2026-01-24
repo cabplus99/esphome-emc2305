@@ -14,7 +14,7 @@ static const uint8_t FAN_SETTING = 0x00;
 static const uint8_t FAN_TACH_MSB[5] = {0x3E, 0x4E, 0x5E, 0x6E, 0x7E};
 static const uint8_t FAN_TACH_LSB[5] = {0x3F, 0x4F, 0x5F, 0x6F, 0x7F};
 static const uint8_t FAN_CONFIG[5]   = {0x32, 0x42, 0x52, 0x62, 0x72};
-
+static const uint8_t FAN_RAMP[5]     = {0x36, 0x46, 0x56, 0x66, 0x76};
 
 ///////////////////////////////////////////////////////////////////////////
 // Setup
@@ -44,30 +44,29 @@ void Emc2305Component::setup() {
 
   // Enable tach on all 5 fans
   for (int i = 0; i < 5; i++) {
-  // --- FAN_CONFIG ---
-  // bit4 = tach enable
-  // bits2:0 = tach range (0x07 = max range)
-  // bits3:1 = ramp update rate (example: 0b011)
-  uint8_t fan_config =
-      0x10 |                  // TACH enable
-      (this->ramp_rate_ << 1) | // ramp update rate (3 bits)
-      0x07;                    // TACH range
+    // --- FAN_CONFIG ---
+    // bit4 = tach enable
+    // bits2:0 = tach range (0x07 = max range)
+    uint8_t fan_config =
+        0x10 |    // TACH enable
+        0x07;     // TACH range max
 
-  if (!this->write_byte(FAN_CONFIG[i], fan_config)) {
-    ESP_LOGW(TAG, "Failed to set FAN_CONFIG for fan %d", i + 1);
-  }
-
-  // --- FAN_STEP ---
-  // Sets max PWM step per update (hardware ramp)
-  if (this->ramp_step_ > 0) {
-    if (!this->write_byte(FAN_BASE_REG[i] + 0x01, this->ramp_step_)) {
-      ESP_LOGW(TAG, "Failed to set ramp step for fan %d", i + 1);
+    if (!this->write_byte(FAN_CONFIG[i], fan_config)) {
+      ESP_LOGW(TAG, "Failed to set FAN_CONFIG for fan %d", i + 1);
     }
-  }
+
+    // --- RAMP / SPIN-UP ---
+    // Spin-up register is 0x36/0x46/0x56/0x66/0x76
+    if (this->ramp_step_ > 0) {
+      if (!this->write_byte(FAN_RAMP[i], this->ramp_step_)) {
+        ESP_LOGW(TAG, "Failed to set ramp step for fan %d", i + 1);
+      }
+    }
 
     // --- Start stopped ---
     this->set_duty_cycle(i, 0.0f);
   }
+
 
 
   ESP_LOGI(TAG, "[0x%02X] Init complete", this->address_);
