@@ -46,6 +46,9 @@ class Emc2305Component : public Component, public i2c::I2CDevice {
   void set_dac_conversion_rate(Emc2305DACConversionRate conversion_rate) {
     this->dac_conversion_rate_ = conversion_rate;
   }
+  
+  void set_ramp_step(uint8_t step) { this->ramp_step_ = step; }
+  void set_ramp_rate(uint8_t rate) { this->ramp_rate_ = rate; }
 
   /// Invert the polarity of the PWM output.
   void set_inverted(bool inverted) { this->inverted_ = inverted; }
